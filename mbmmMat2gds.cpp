@@ -192,47 +192,25 @@ void parseBMMData(unsigned char * data, long sr, long sc, long app, char * fname
 // Gateway function
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) 
 {
-  
 
-    char *bmmName;
     char *gdsName;
-    
-    char *buffer;
-    unsigned char sizeInfo[4];
-    FILE *fp;
-    
-    
-    bmmName = mxArrayToString(prhs[0]);
-    gdsName = mxArrayToString(prhs[1]);
-    
-    if((fp=fopen(bmmName, "rb"))==NULL) 
-        printf("Cannot open file.\n");
-    
-    
-    //unsigned char dum[26];
-    //fread(data, 1, 26, fp);
-    
-    fread(buffer, sizeof(char), 8, fp);
-    
-    
-    fread(sizeInfo, 1, 4, fp);
-    long app    = decode32(sizeInfo);
-    fread(sizeInfo, 1, 4, fp);
-    long fSize  = decode32(sizeInfo);
-    fread(sizeInfo, 1, 4, fp);
-    long sr     = decode32(sizeInfo);
-    fread(sizeInfo, 1, 4, fp);
-    long sc     = decode32(sizeInfo);
-    
-   
-    
-    unsigned char data[fSize];
-    fread(data, 1, fSize, fp);
-    printf("sr = %ld, sc = %ld, fsize = %ld, app = %ld\n", sr, sc, fSize, app);
-    fclose(fp);
 
-    for (int k = 100; k < 200; k++)
-        printf("Data[%d] = %d\n", k, (int)data[k]);
+    double* dat = mxGetPr(prhs[0]);  // Pointer to the matrix data    gdsName = mxArrayToString(prhs[1]);
+    gdsName = mxArrayToString(prhs[1]);
+
+    long sr = (long)dat[0];
+    long sc = (long)dat[1];
+    long app = (long)dat[2];
+
+    long fSize = sr * sc;
+
+    unsigned char data[fSize];
+
+    for (long k = 0; k < fSize; k++)
+        data[k] = (unsigned char)dat[k + 3];
+
+
+    printf("sr = %ld, sc = %ld, fsize = %ld, app = %ld\n", sr, sc, fSize, app);
 
     parseBMMData(data, sr, sc, app, gdsName);
     
