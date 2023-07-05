@@ -1,0 +1,4 @@
+mpm-packages/*
+testfiles/*
+*.gds
+*.bmm

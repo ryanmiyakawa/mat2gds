@@ -1,0 +1,10 @@
+
+% Uses: https://github.com/ryanmiyakawa/coords2gds
+%
+% Executes a compiled binary built from above repo
+
+function csv2gds(csvFile, outputGDSFile)
+
+!./bin/text2gds 
+
+
